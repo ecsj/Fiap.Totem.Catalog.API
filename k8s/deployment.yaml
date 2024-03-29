@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fiap-totem-api
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: fiap-totem-api
+  template:
+    metadata:
+      labels:
+        app: fiap-totem-api
+    spec:
+      containers:
+        - name: fiap-totem-api-container
+          image: ecsj/fiap.totem:2.0
+          ports:
+            - containerPort: 5000
+          envFrom:
+            - secretRef:
+                name: fiap-totem-api-secret
+          env:
+            - name: ASPNETCORE_URLS
+              value: "http://+:5000"
+            - name: ASPNETCORE_ENVIRONMENT
+              value: Development
+          envFrom:
+          - secretRef:
+              name: fiap-totem-api-secret
+
